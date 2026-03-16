@@ -45,7 +45,7 @@ ASK-US/
 │   ├── index.html          ← Full single page app
 │   ├── script.js           ← Charts + API logic
 │   └── style.css           ← Extra styles
-├── HOW_TO_RUN.txt          ← Simple run instructions
+├── HOW_TO_RUN.md         ← Simple run instructions
 └── README.md               ← This file
 ```
 
