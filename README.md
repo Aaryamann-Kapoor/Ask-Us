@@ -105,4 +105,4 @@ Frontend renders Chart.js charts with animations
 
 ---
 
-*Made with ❤️ for Geeks for Geeks Hackathon 2024*
+*Made with ❤️ for Geeks for Geeks Hackathon 2026*
