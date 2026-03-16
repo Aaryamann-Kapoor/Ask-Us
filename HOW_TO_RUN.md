@@ -3,6 +3,7 @@
 
 
 STEP 1 — OPEN TERMINAL 1 (Backend)
+
 ════════════════════════════════════
 1. Press  Windows Key + R
 2. Type   cmd   and press Enter
@@ -23,6 +24,7 @@ STEP 1 — OPEN TERMINAL 1 (Backend)
 
 
 STEP 2 — OPEN TERMINAL 2 (Frontend)
+
 ═════════════════════════════════════
 1. Press  Windows Key + R  again
 2. Type   cmd   and press Enter
@@ -43,6 +45,7 @@ STEP 2 — OPEN TERMINAL 2 (Frontend)
 
 
 STEP 3 — OPEN THE APP
+
 ══════════════════════
 1. Open your browser (Chrome recommended)
 2. Type this in the address bar:
@@ -55,6 +58,7 @@ STEP 3 — OPEN THE APP
 
 
 STEP 4 — TRY A QUERY
+
 ═════════════════════
 Type any of these in the chat box and press Ask:
 
@@ -66,12 +70,16 @@ Type any of these in the chat box and press Ask:
 
 
 TO STOP THE WEB APP
+
 ════════════════
+
 Press  Ctrl + C  in both terminals to stop.
 
 
 TROUBLESHOOTING
+
 ════════════════
+
 ❌ "python is not recognized"
    → Download Python from https://www.python.org/downloads/
    → During install, tick ✅ "Add Python to PATH"
@@ -89,6 +97,6 @@ TROUBLESHOOTING
    → Replace app.py with the latest version from Claude
    → Restart Terminal 1
 
-══════════════════════════════════════════════════════════════
+══════════════════════════════════════════════════════════════                          
   Both terminals MUST stay open while using the app!
 ══════════════════════════════════════════════════════════════
