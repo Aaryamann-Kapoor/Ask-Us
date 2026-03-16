@@ -1,0 +1,11 @@
+/* Ask-Us — extra responsive styles */
+@media (max-width: 768px) {
+  #insightsRow    { grid-template-columns: 1fr !important; }
+  #chartsContainer{ grid-template-columns: 1fr !important; }
+  #sidebar        { position: absolute; z-index: 50; height: 100%; box-shadow: 4px 0 20px rgba(92,61,46,0.15); }
+  .feature-cards  { grid-template-columns: 1fr !important; }
+}
+@media print {
+  #chatPanel, #navbar { display: none !important; }
+  #chartsGrid { display: block !important; }
+}

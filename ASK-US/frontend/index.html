@@ -1,0 +1,602 @@
+<!DOCTYPE html>
+<html lang="en" id="htmlRoot">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Ask-Us ✨ — AI Business Intelligence</title>
+
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.2/dist/chart.umd.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Lora:wght@400;500;600;700&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet" />
+
+  <style>
+    /* ── LIGHT (cream) theme ── */
+    :root {
+      --cream:      #FAF6F0;
+      --cream2:     #F2EBE0;
+      --cream3:     #E8DDD0;
+      --brown:      #5C3D2E;
+      --brown2:     #8B6652;
+      --brown3:     #C4956A;
+      --terra:      #C1654A;
+      --sage:       #7A9E7E;
+      --mustard:    #C9962C;
+      --text:       #2C1810;
+      --text2:      #6B4C3B;
+      --text3:      #9C7B6B;
+      --white:      #FFFCF8;
+      --shadow:     rgba(92,61,46,0.12);
+      --card-bg:    #FFFCF8;
+      --nav-bg:     #FFFCF8;
+      --sidebar-bg: #FFFCF8;
+      --input-bg:   #FAF6F0;
+      --border:     #E8DDD0;
+    }
+
+    /* ── DARK theme ── */
+    html.dark {
+      --cream:      #1A1512;
+      --cream2:     #231E1A;
+      --cream3:     #2E2620;
+      --brown:      #E8C9A0;
+      --brown2:     #C4956A;
+      --brown3:     #A0724A;
+      --terra:      #C1654A;
+      --sage:       #7A9E7E;
+      --mustard:    #C9962C;
+      --text:       #F0E6D8;
+      --text2:      #C4A882;
+      --text3:      #8A7060;
+      --white:      #231E1A;
+      --shadow:     rgba(0,0,0,0.3);
+      --card-bg:    #231E1A;
+      --nav-bg:     #1A1512;
+      --sidebar-bg: #1A1512;
+      --input-bg:   #2E2620;
+      --border:     #3A2E24;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; transition: background-color .3s, color .2s, border-color .2s; }
+
+    body {
+      background: var(--cream);
+      color: var(--text);
+      font-family: 'Inter', sans-serif;
+      height: 100vh;
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+    }
+
+    h1, h2, h3, .logo-text, .chart-title, .welcome-title { font-family: 'Lora', serif; }
+
+    ::-webkit-scrollbar { width: 6px; height: 6px; }
+    ::-webkit-scrollbar-track { background: var(--cream2); }
+    ::-webkit-scrollbar-thumb { background: var(--brown3); border-radius: 3px; }
+
+    /* ── NAVBAR ── */
+    #navbar {
+      background: var(--nav-bg);
+      border-bottom: 2px solid var(--border);
+      padding: 10px 18px;
+      display: flex; align-items: center; gap: 10px;
+      flex-shrink: 0;
+      box-shadow: 0 2px 12px var(--shadow);
+      flex-wrap: wrap;
+    }
+
+    .logo-box {
+      width: 36px; height: 36px;
+      background: var(--terra);
+      border-radius: 10px;
+      display: flex; align-items: center; justify-content: center;
+      box-shadow: 0 4px 12px rgba(193,101,74,0.35);
+      font-size: 1.1rem; flex-shrink: 0;
+    }
+
+    .logo-text { font-size: 1.25rem; font-weight: 700; color: var(--brown); }
+    .logo-text span { color: var(--terra); }
+    .tagline {
+      font-size: 0.7rem; color: var(--text3);
+      background: var(--cream2); padding: 3px 10px;
+      border-radius: 20px; border: 1px solid var(--border);
+    }
+
+    .status-badge {
+      display: flex; align-items: center; gap: 6px;
+      font-size: 0.75rem; color: var(--text2);
+      background: var(--cream2); padding: 5px 12px;
+      border-radius: 20px; border: 1px solid var(--border);
+    }
+    .dot { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; }
+    .dot-green { background: var(--sage); box-shadow: 0 0 6px var(--sage); }
+    .dot-red   { background: var(--terra); box-shadow: 0 0 6px var(--terra); }
+
+    .icon-btn {
+      background: var(--cream2); border: 1px solid var(--border);
+      border-radius: 8px; padding: 6px 10px;
+      color: var(--text2); cursor: pointer;
+      font-size: 0.78rem; font-family: 'Inter', sans-serif;
+      display: flex; align-items: center; gap: 5px;
+      transition: all .2s;
+    }
+    .icon-btn:hover { background: var(--cream3); color: var(--brown); border-color: var(--brown3); }
+
+    /* ── LAYOUT ── */
+    #layout { display: flex; flex: 1; overflow: hidden; }
+
+    /* ── SIDEBAR ── */
+    #sidebar {
+      width: 265px; min-width: 265px;
+      background: var(--sidebar-bg);
+      border-right: 2px solid var(--border);
+      display: flex; flex-direction: column;
+      overflow-y: auto; padding: 14px; gap: 12px;
+      transition: width .3s ease, min-width .3s ease, padding .3s ease;
+    }
+    #sidebar.collapsed { width: 0; min-width: 0; padding: 0; overflow: hidden; border: none; }
+
+    .s-section {
+      background: var(--cream);
+      border: 1.5px solid var(--border);
+      border-radius: 12px; padding: 13px;
+    }
+    .s-label {
+      font-size: 0.68rem; font-weight: 600;
+      text-transform: uppercase; letter-spacing: .08em;
+      color: var(--text3); margin-bottom: 9px;
+    }
+
+    .dataset-name { font-size: 0.88rem; font-weight: 600; color: var(--sage); font-family: 'Lora', serif; }
+    .dataset-sub  { font-size: 0.72rem; color: var(--text3); margin-top: 2px; }
+
+    .upload-zone {
+      border: 2px dashed var(--border); border-radius: 10px;
+      padding: 14px; text-align: center; cursor: pointer;
+      transition: all .2s; background: var(--cream2);
+    }
+    .upload-zone:hover { border-color: var(--brown3); background: var(--cream3); }
+    .upload-zone p     { font-size: 0.78rem; color: var(--text3); margin-top: 5px; }
+    .upload-zone small { font-size: 0.68rem; color: var(--text3); }
+
+    .reset-btn {
+      width: 100%; margin-top: 7px; font-size: 0.75rem;
+      color: var(--text2); background: var(--cream2);
+      border: 1.5px solid var(--border); border-radius: 8px;
+      padding: 6px; cursor: pointer; transition: all .2s;
+      font-family: 'Inter', sans-serif;
+    }
+    .reset-btn:hover { background: var(--cream3); color: var(--brown); }
+
+    .demo-pill {
+      background: var(--card-bg); border: 1.5px solid var(--border);
+      border-radius: 20px; padding: 7px 12px;
+      font-size: 0.75rem; color: var(--text2); cursor: pointer;
+      transition: all .2s; display: block; width: 100%;
+      text-align: left; font-family: 'Inter', sans-serif; line-height: 1.4;
+    }
+    .demo-pill:hover { background: var(--cream2); border-color: var(--brown3); color: var(--brown); }
+
+    /* ── Query history ── */
+    .history-item {
+      display: flex; align-items: center; gap: 6px;
+      padding: 6px 8px; border-radius: 8px;
+      cursor: pointer; transition: background .15s;
+      font-size: 0.75rem; color: var(--text2);
+      border: 1px solid transparent;
+    }
+    .history-item:hover { background: var(--cream2); border-color: var(--border); }
+    .history-num {
+      font-size: 0.65rem; background: var(--terra);
+      color: white; border-radius: 50%;
+      width: 18px; height: 18px; display: flex;
+      align-items: center; justify-content: center;
+      flex-shrink: 0; font-weight: 600;
+    }
+    .history-text { flex: 1; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+
+    .schema-item {
+      display: flex; align-items: center; gap: 7px;
+      padding: 3px 5px; border-radius: 6px;
+      font-size: 0.75rem; color: var(--text2); transition: background .15s;
+    }
+    .schema-item:hover { background: var(--cream2); }
+    .schema-dot { width: 6px; height: 6px; border-radius: 50%; background: var(--brown3); flex-shrink: 0; }
+
+    .tip-item { font-size: 0.73rem; color: var(--text3); padding: 3px 0; display: flex; gap: 6px; line-height: 1.4; }
+
+    /* ── RIGHT PANEL ── */
+    #rightPanel { display: flex; flex-direction: column; flex: 1; overflow: hidden; }
+    #dashboardArea { flex: 1; overflow-y: auto; padding: 18px; }
+
+    /* ── SUMMARY CARD ── */
+    #summaryCard {
+      background: var(--card-bg);
+      border: 1.5px solid var(--border);
+      border-radius: 14px;
+      padding: 16px 20px;
+      margin-bottom: 18px;
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 12px;
+      box-shadow: 0 2px 10px var(--shadow);
+      animation: fadeUp .4s ease both;
+    }
+
+    .summary-item { text-align: center; }
+    .summary-value {
+      font-size: 1.4rem; font-weight: 700;
+      color: var(--terra); font-family: 'Lora', serif;
+    }
+    .summary-label { font-size: 0.72rem; color: var(--text3); margin-top: 2px; }
+    .summary-divider {
+      width: 1px; background: var(--border);
+      align-self: stretch;
+    }
+
+    /* ── WELCOME ── */
+    #welcomeScreen {
+      display: flex; flex-direction: column;
+      align-items: center; justify-content: center;
+      height: 100%; gap: 18px; text-align: center;
+    }
+    .welcome-icon {
+      width: 76px; height: 76px; background: var(--terra);
+      border-radius: 20px; display: flex;
+      align-items: center; justify-content: center;
+      font-size: 2rem;
+      box-shadow: 0 8px 24px rgba(193,101,74,0.3);
+    }
+    .welcome-title { font-size: 1.9rem; font-weight: 700; color: var(--brown); }
+    .welcome-sub   { font-size: 0.95rem; color: var(--text3); max-width: 400px; line-height: 1.6; }
+    .feature-cards { display: grid; grid-template-columns: repeat(3,1fr); gap: 10px; max-width: 460px; width: 100%; }
+    .feature-card  {
+      background: var(--card-bg); border: 1.5px solid var(--border);
+      border-radius: 12px; padding: 12px 8px; text-align: center;
+    }
+    .feature-card .icon  { font-size: 1.5rem; margin-bottom: 5px; }
+    .feature-card .label { font-size: 0.72rem; color: var(--text2); font-weight: 500; }
+    .welcome-hint { font-size: 0.82rem; color: var(--text3); }
+
+    /* ── LOADING ── */
+    #loadingState {
+      display: none; flex-direction: column;
+      align-items: center; justify-content: center;
+      height: 100%; gap: 14px;
+    }
+    #loadingState.active { display: flex; }
+    .spinner-ring {
+      width: 54px; height: 54px;
+      border: 4px solid var(--cream3);
+      border-top-color: var(--terra);
+      border-radius: 50%;
+      animation: spin 1s linear infinite;
+    }
+    @keyframes spin { to { transform: rotate(360deg); } }
+    .loading-text { font-size: 1rem; color: var(--text2); font-family: 'Lora', serif; }
+    .loading-tip  {
+      font-size: 0.8rem; color: var(--text3);
+      background: var(--cream2); border: 1px solid var(--border);
+      border-radius: 20px; padding: 6px 16px;
+      max-width: 340px; text-align: center; line-height: 1.5;
+      animation: fadeUp .5s ease both;
+    }
+
+    /* ── CHARTS ── */
+    #chartsGrid { display: none; }
+    #chartsGrid.active { display: block; }
+
+    #insightsRow { display: grid; grid-template-columns: repeat(3,1fr); gap: 12px; margin-bottom: 18px; }
+
+    .insight-card {
+      background: var(--card-bg); border: 1.5px solid var(--border);
+      border-left: 4px solid var(--terra); border-radius: 10px;
+      padding: 11px 13px; font-size: 0.8rem; color: var(--text2);
+      line-height: 1.5; animation: fadeUp .4s ease both;
+    }
+
+    #chartsContainer { display: grid; gap: 16px; }
+
+    .chart-card {
+      background: var(--card-bg); border: 1.5px solid var(--border);
+      border-radius: 14px; padding: 16px;
+      box-shadow: 0 2px 12px var(--shadow);
+      transition: transform .2s, box-shadow .2s;
+      animation: fadeUp .4s ease both;
+    }
+    .chart-card:hover { transform: translateY(-2px); box-shadow: 0 6px 20px var(--shadow); }
+
+    .chart-card-header { display: flex; align-items: center; gap: 8px; margin-bottom: 12px; }
+    .chart-title { font-size: 0.92rem; font-weight: 600; color: var(--brown); flex: 1; }
+    .chart-type-badge {
+      font-size: 0.65rem; color: var(--text3);
+      background: var(--cream2); padding: 2px 8px;
+      border-radius: 20px; border: 1px solid var(--border);
+      text-transform: capitalize;
+    }
+    .chart-dl-btn {
+      background: none; border: none; color: var(--text3);
+      cursor: pointer; padding: 4px; border-radius: 6px; transition: all .2s;
+    }
+    .chart-dl-btn:hover { color: var(--terra); background: var(--cream2); }
+    .chart-wrapper { height: 225px; position: relative; }
+
+    /* ── CHAT PANEL ── */
+    #chatPanel { border-top: 2px solid var(--border); background: var(--card-bg); flex-shrink: 0; }
+
+    #chatHistory {
+      max-height: 110px; overflow-y: auto;
+      padding: 8px 16px;
+      display: flex; flex-direction: column; gap: 7px;
+    }
+
+    .msg { padding: 7px 13px; border-radius: 12px; font-size: 0.8rem; max-width: 80%; line-height: 1.5; animation: fadeUp .3s ease both; }
+    .msg-user { background: var(--cream2); border: 1px solid var(--border); align-self: flex-end; border-radius: 12px 12px 4px 12px; color: var(--text); }
+    .msg-ai   { background: var(--card-bg); border: 1.5px solid var(--brown3); align-self: flex-start; border-radius: 12px 12px 12px 4px; color: var(--brown); }
+    .msg-label { font-weight: 600; margin-right: 5px; }
+
+    #inputBar { display: flex; gap: 10px; align-items: flex-end; padding: 10px 16px; border-top: 1px solid var(--border); }
+
+    #queryInput {
+      flex: 1; background: var(--input-bg);
+      border: 1.5px solid var(--border); border-radius: 12px;
+      color: var(--text); font-family: 'Inter', sans-serif;
+      font-size: 0.88rem; padding: 9px 13px;
+      resize: none; outline: none; transition: border-color .2s; line-height: 1.5;
+    }
+    #queryInput:focus { border-color: var(--brown3); background: var(--card-bg); }
+    #queryInput::placeholder { color: var(--text3); }
+
+    #sendBtn {
+      background: var(--terra); border: none; border-radius: 10px;
+      color: white; cursor: pointer; padding: 9px 18px;
+      font-size: 0.88rem; font-weight: 600; font-family: 'Inter', sans-serif;
+      transition: all .2s; white-space: nowrap;
+      box-shadow: 0 4px 12px rgba(193,101,74,0.3);
+    }
+    #sendBtn:hover:not(:disabled) { background: #a8563d; transform: translateY(-1px); }
+    #sendBtn:disabled { background: var(--cream3); color: var(--text3); cursor: not-allowed; box-shadow: none; }
+
+    #metaBar {
+      display: flex; align-items: center; gap: 8px; flex-wrap: wrap;
+      padding: 5px 16px 9px; font-size: 0.7rem; color: var(--text3);
+    }
+    #metaBar label { display: flex; align-items: center; gap: 5px; cursor: pointer; }
+    #metaBar input[type="checkbox"] { accent-color: var(--terra); }
+
+    .follow-up-badge {
+      background: var(--terra); color: white;
+      font-size: 0.62rem; padding: 2px 7px;
+      border-radius: 10px; display: none;
+    }
+    .follow-up-badge.show { display: inline-block; }
+
+    /* ── ANIMATION TOGGLE ── */
+    #animToggle { accent-color: var(--terra); }
+
+    /* ── TOAST ── */
+    #toast {
+      position: fixed; bottom: 80px; right: 20px;
+      background: var(--card-bg); border: 1.5px solid var(--brown3);
+      border-radius: 10px; padding: 10px 16px;
+      font-size: 0.8rem; color: var(--text);
+      box-shadow: 0 4px 16px var(--shadow);
+      z-index: 9999; opacity: 0; transform: translateY(8px);
+      transition: all .3s; pointer-events: none;
+    }
+    #toast.show { opacity: 1; transform: translateY(0); }
+
+    #toggleBtn {
+      background: none; border: none; color: var(--text3);
+      cursor: pointer; padding: 6px; border-radius: 8px; transition: all .2s;
+    }
+    #toggleBtn:hover { background: var(--cream2); color: var(--brown); }
+
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(10px); }
+      to   { opacity: 1; transform: none; }
+    }
+
+    @media (max-width: 768px) {
+      #sidebar        { position: absolute; z-index: 50; height: 100%; }
+      #insightsRow    { grid-template-columns: 1fr !important; }
+      #chartsContainer{ grid-template-columns: 1fr !important; }
+      #summaryCard    { grid-template-columns: repeat(2,1fr); }
+    }
+  </style>
+</head>
+<body>
+
+<!-- ═══ NAVBAR ═══ -->
+<nav id="navbar">
+  <button id="toggleBtn" title="Toggle sidebar">
+    <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M3 12h18M3 6h18M3 18h18"/></svg>
+  </button>
+
+  <div class="logo-box">🧞</div>
+  <span class="logo-text">Ask<span>-Us</span></span>
+  <span class="tagline">GFG Hackathon 2024</span>
+
+  <div style="flex:1"></div>
+
+  <div class="status-badge">
+    <div class="dot dot-red" id="statusDot"></div>
+    <span id="statusText">Connecting…</span>
+  </div>
+
+  <!-- Dark/Light toggle -->
+  <button class="icon-btn" id="themeToggleBtn" title="Switch theme">
+    <span id="themeIcon">🌙</span>
+    <span id="themeLabel">Dark Mode</span>
+  </button>
+
+  <!-- Animation toggle -->
+  <label class="icon-btn" title="Toggle chart animations" style="cursor:pointer">
+    <input type="checkbox" id="animToggle" checked style="accent-color:var(--terra)" />
+    <span>✨ Animations</span>
+  </label>
+
+  <button class="icon-btn" id="exportPngBtn">
+    <svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4M7 10l5 5 5-5M12 15V3"/></svg>
+    Save PNG
+  </button>
+  <button class="icon-btn" id="exportHtmlBtn">
+    <svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M10 20l4-16M4 9l-3 3 3 3M20 9l3 3-3 3"/></svg>
+    Save HTML
+  </button>
+</nav>
+
+<!-- ═══ LAYOUT ═══ -->
+<div id="layout">
+
+  <!-- ── SIDEBAR ── -->
+  <aside id="sidebar">
+
+    <div class="s-section">
+      <div class="s-label">📂 Active Dataset</div>
+      <div class="dataset-name" id="datasetName">YouTube Sample</div>
+      <div class="dataset-sub"  id="datasetSub">40 rows · 12 columns</div>
+    </div>
+
+    <div class="s-section">
+      <div class="s-label">⬆️ Upload Your CSV</div>
+      <div class="upload-zone" id="uploadZone">
+        <svg width="26" height="26" fill="none" stroke="currentColor" stroke-width="1.5"
+             viewBox="0 0 24 24" style="color:var(--text3);margin:0 auto">
+          <path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4M17 8l-5-5-5 5M12 3v12"/>
+        </svg>
+        <p>Click here or drag & drop a CSV</p>
+        <small>Any CSV with headers works</small>
+        <input type="file" id="csvInput" accept=".csv" style="display:none" />
+      </div>
+      <button class="reset-btn" id="resetBtn">↺ Reset to Sample Data</button>
+    </div>
+
+    <!-- ── Query History ── -->
+    <div class="s-section">
+      <div class="s-label" style="display:flex;align-items:center;justify-content:space-between">
+        <span>🕐 Query History</span>
+        <button onclick="clearHistory()" style="font-size:0.65rem;background:none;border:none;color:var(--text3);cursor:pointer">Clear</button>
+      </div>
+      <div id="historyList">
+        <div style="font-size:0.75rem;color:var(--text3);padding:4px 0">No queries yet — ask something below!</div>
+      </div>
+    </div>
+
+    <div class="s-section">
+      <div class="s-label">💡 Try These Queries</div>
+      <div style="display:flex;flex-direction:column;gap:6px">
+        <button class="demo-pill" data-q="Show monthly views trend by category for India only ads-enabled videos">📈 Monthly views by category (India)</button>
+        <button class="demo-pill" data-q="Compare average likes, comments and shares across all categories">📊 Compare engagement metrics</button>
+        <button class="demo-pill" data-q="Show sentiment score distribution across regions and languages">😊 Sentiment by region & language</button>
+        <button class="demo-pill" data-q="Which category has highest views to likes ratio? Show as bar chart">🏆 Best performing category</button>
+        <button class="demo-pill" data-q="Show views distribution by language as pie chart">🌍 Views by language</button>
+      </div>
+    </div>
+
+    <div class="s-section">
+      <div class="s-label">🗂️ Column Names</div>
+      <div id="schemaList" style="display:flex;flex-direction:column;gap:2px"></div>
+    </div>
+
+    <div class="s-section">
+      <div class="s-label">✏️ Tips</div>
+      <div style="display:flex;flex-direction:column;gap:4px">
+        <div class="tip-item"><span>👉</span><span>Mention what you want to see, e.g. "show views by region"</span></div>
+        <div class="tip-item"><span>👉</span><span>Use Follow-up mode to refine results</span></div>
+        <div class="tip-item"><span>👉</span><span>Upload your own CSV to analyse real data</span></div>
+        <div class="tip-item"><span>👉</span><span>Click Save PNG to download your dashboard</span></div>
+      </div>
+    </div>
+
+  </aside>
+
+  <!-- ── RIGHT PANEL ── -->
+  <div id="rightPanel">
+    <div id="dashboardArea">
+
+      <!-- ── SUMMARY CARD (always visible) ── -->
+      <div id="summaryCard">
+        <div class="summary-item">
+          <div class="summary-value" id="sumRows">40</div>
+          <div class="summary-label">Total Rows</div>
+        </div>
+        <div class="summary-divider"></div>
+        <div class="summary-item">
+          <div class="summary-value" id="sumCols">12</div>
+          <div class="summary-label">Columns</div>
+        </div>
+        <div class="summary-divider"></div>
+        <div class="summary-item">
+          <div class="summary-value" id="sumTopCat">Gaming</div>
+          <div class="summary-label">Top Category</div>
+        </div>
+        <div class="summary-divider"></div>
+        <div class="summary-item">
+          <div class="summary-value" id="sumQueries">0</div>
+          <div class="summary-label">Queries Asked</div>
+        </div>
+      </div>
+
+      <!-- Welcome -->
+      <div id="welcomeScreen">
+        <div class="welcome-icon">🧞</div>
+        <div>
+          <div class="welcome-title">Welcome to Ask-Us</div>
+          <div class="welcome-sub" style="margin-top:8px">
+            Type a plain English question below and get a beautiful dashboard instantly — no technical skills needed!
+          </div>
+        </div>
+        <div class="feature-cards">
+          <div class="feature-card"><div class="icon">💬</div><div class="label">Ask in Plain English</div></div>
+          <div class="feature-card"><div class="icon">📊</div><div class="label">Get Instant Charts</div></div>
+          <div class="feature-card"><div class="icon">🤖</div><div class="label">AI Insights</div></div>
+        </div>
+        <div class="welcome-hint">👈 Click any example query in the sidebar to get started</div>
+      </div>
+
+      <!-- Loading -->
+      <div id="loadingState">
+        <div class="spinner-ring"></div>
+        <div class="loading-text">Preparing your dashboard…</div>
+        <div class="loading-tip" id="loadingTip">💡 Did you know? You can ask follow-up questions to refine your charts!</div>
+      </div>
+
+      <!-- Charts -->
+      <div id="chartsGrid">
+        <div id="insightsRow"></div>
+        <div id="chartsContainer"></div>
+      </div>
+
+    </div>
+
+    <!-- ── CHAT PANEL ── -->
+    <div id="chatPanel">
+      <div id="chatHistory"></div>
+      <div id="inputBar">
+        <textarea id="queryInput" rows="2"
+          placeholder="Type your question here… e.g. 'Show monthly views by category'"></textarea>
+        <button id="sendBtn">Ask ✨</button>
+      </div>
+      <div id="metaBar">
+        <span id="queryCount">0 questions asked</span>
+        <span>·</span>
+        <span id="modelBadge">Gemini AI</span>
+        <span>·</span>
+        <label>
+          <input type="checkbox" id="followUpToggle" />
+          Follow-up mode
+        </label>
+        <span class="follow-up-badge" id="followUpBadge">follow-up ON</span>
+        <div style="margin-left:auto;color:var(--text3)">Ask-Us × GFG Hackathon 2024</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div id="toast"></div>
+<script src="script.js"></script>
+</body>
+</html>
