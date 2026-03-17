@@ -30,7 +30,7 @@ STEP 2 — OPEN TERMINAL 2 (Frontend)
 2. Type   cmd   and press Enter
 3. Copy and paste this command:
 
-   cd /d "Your-File-Path-To-The-Frontend"
+   cd "Your-File-Path-To-The-Frontend"
 
 4. Press Enter
 5. Then paste this command:
@@ -68,6 +68,30 @@ Type any of these in the chat box and press Ask:
    👉 Which category has the highest views?
    👉 Show ads enabled vs disabled views
 
+Step 5 — Get a fresh API key:
+
+1. Go to 👉 https://aistudio.google.com/app/apikey
+2. Sign in with Google
+3. Click **Create API Key**
+4. Copy the key
+5. Open `backend/app.py` in VS Code
+6. Find line 14 which looks like this:
+   ```python
+      GEMINI_API_KEY = "your_key_here"
+   ```
+7. Replace it with your copied key:
+   ```python
+      GEMINI_API_KEY = "paste_your_actual_key_here"
+   ```
+8. Save the file with **Ctrl + S**
+9. Restart the backend in the terminal:
+   ```bash
+      python -m uvicorn app:app --reload
+   ```
+10. Go back to the browser and refresh the page
+11. The green dot should now say **AI Connected ✓**
+
+> ⚠️ Never share your API key with anyone or push it to GitHub!
 
 TO STOP THE WEB APP
 
